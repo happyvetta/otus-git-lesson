@@ -44,3 +44,17 @@ export const getTotal = (items = [], discount = 0) => {
   }, 0);
   return total - (total * discount) / 100;
 };
+
+export const getScore = (object) => {
+  if (!object) {
+    throw new Error('Scores object is not defined');
+  }
+
+  const scores = Object.values(object);
+  let sum = 0;
+  scores.forEach(score => {
+    sum += score;
+  });
+
+  return sum;
+};

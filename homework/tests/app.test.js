@@ -58,3 +58,15 @@ describe("Check getTotal function", () => {
     expect(() => app.getTotal(null)).toThrow();
   });
 });
+
+describe("Check getScore function", () => {
+  const scores = {
+    Anna: 10,
+    Olga: 1,
+    Ivan: 5,
+  };
+
+  test("Check getScore returns the sum", () => {
+    expect(app.getScore(scores)).toBe(16);
+  });
+});
