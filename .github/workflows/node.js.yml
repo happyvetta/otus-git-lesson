@@ -28,3 +28,42 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      with: 
+        name: report
+        if-no-files-found: error
+        path: ./jest-html-report
+
+    - name: Run tests coverage
+      run: npm run coverage
+      continue-on-error: true
+
+    - name: Upload coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage
+        if-no-files-found: error
+        path: ./coverage
+
+    - name: send telegram message on push
+      uses: appleboy/telegram-action@master
+      with:
+        to: -${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ${{ github.actor }} created commit new view:
+          Commit message: ${{ github.event.commits[0].message }}
+
+          Repository: ${{ github.repository }}
+
+          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './jest-html-report'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v1
