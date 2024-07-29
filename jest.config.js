@@ -8,7 +8,7 @@ module.exports = {
     [
       "./node_modules/jest-html-reporter",
       {
-        outputPath: "./jest-html-report.html"
+        outputPath: "./jest-html-report/report.html",
       },
     ],
   ],
