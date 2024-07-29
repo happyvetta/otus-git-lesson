@@ -5,13 +5,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,51 +18,51 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - name: Upload report
-      uses: actions/upload-artifact@v3
-      with: 
-        name: report
-        if-no-files-found: error
-        path: ./jest-html-report
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          if-no-files-found: error
+          path: ./jest-html-report
 
-    - name: Run tests coverage
-      run: npm run coverage
-      continue-on-error: true
+      - name: Run tests coverage
+        run: npm run coverage
+        continue-on-error: true
 
-    - name: Upload coverage
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage
-        if-no-files-found: error
-        path: ./coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          if-no-files-found: error
+          path: ./coverage
 
-    - name: send telegram message on push
-      uses: appleboy/telegram-action@master
-      with:
-        to: -${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.actor }} created commit new view:
-          Commit message: ${{ github.event.commits[0].message }}
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: -${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} created commit new view:
+            Commit message: ${{ github.event.commits[0].message }}
 
-          Repository: ${{ github.repository }}
+            Repository: ${{ github.repository }}
 
-          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: './jest-html-report'
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./jest-html-report"
 
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v1
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

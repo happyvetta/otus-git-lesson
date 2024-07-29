@@ -45,7 +45,7 @@ describe("Book store tests", () => {
   test.each([
     [booksList[0].isbn, 204],
     [booksList[1].isbn, 204],
-  ])("Delete book", async (example, expected) => {
+  ])("Delete %s book", async (example, expected) => {
     const response = await bookStoreService.deleteBook(
       bookStoreConfig.userId,
       example,
